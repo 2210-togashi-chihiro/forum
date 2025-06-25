@@ -43,7 +43,17 @@ public class ReportService {
      */
     public void saveReport(ReportForm reqReport) {
         Report saveReport = setReportEntity(reqReport);
+
+        //save…キーが存在する場合は更新、存在しない場合は登録
         reportRepository.save(saveReport);
+    }
+
+    /*
+     * レコード削除
+     */
+    public void deleteReport(int id) {
+        //deleteById…キーに該当するレコードを削除
+        reportRepository.deleteById(id);
     }
 
     /*
@@ -55,4 +65,8 @@ public class ReportService {
         report.setContent(reqReport.getContent());
         return report;
     }
+
+
+
 }
+
