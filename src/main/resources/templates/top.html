@@ -18,14 +18,34 @@
             ID : <span th:text="${content.id}"/>
         </div>
         <div class="text">
-            投稿 : <span th:text="${content.content}"/>
+            投稿 : <pre><span th:text="${content.content}"/></pre>
         </div>
-        <div class="button">
+        <div class="delete-button">
             <form th:action="@{/delete/{id}(id=${content.id})}" th:method="delete">
 
                 <input type="submit" value="削除">
-            </form>>
+            </form>
         </div>
+        <div class="edit-button">
+            <form th:action="@{/edit/{id}(id=${content.id})}" th:method="get">
+                <input type="submit" value="投稿を編集">
+            </form>
+        </div>
+            <div class="message-icon" th:each="comment : ${comments}">
+                <div th:if="${comment.reportId == content.id}">
+                    <div class="text">
+                        <pre><span th:text="${comment.reContent}"/></pre>
+                    </div>
+                </div>
+            </div>
+        <form method="post" action="/addComment" th:object="${formModel}">
+            <div class="form-area">
+                <label>返信</label>
+                <textarea class="tweet-box" th:field="*{reContent}" size="20" maxlength="200" /></textarea><br/>
+                <input type="hidden" name="reportId" th:value="${content.id}">
+                <input type="submit" value="送信" />
+            </div>
+        </form>
     </div>
 </div>
 </body>

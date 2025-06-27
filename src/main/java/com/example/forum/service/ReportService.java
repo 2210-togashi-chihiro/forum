@@ -66,6 +66,20 @@ public class ReportService {
         return report;
     }
 
+    /*
+     * レコード1件選択
+     */
+    public ReportForm editContent(Integer id) {
+        //deleteById…キーに該当するレコードを削除
+        List<Report> results = new ArrayList<>();
+
+        //findByIdはOptional<Report>で返る…Select結果が0件の時nullを返すよう[.orElse(null)]を付けてあげる
+        results.add((Report) reportRepository.findById(id).orElse(null));
+
+        List<ReportForm> reports = setReportForm(results);
+        return reports.get(0);
+    }
+
 
 
 }
