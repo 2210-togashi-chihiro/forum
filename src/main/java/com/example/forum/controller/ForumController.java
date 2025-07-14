@@ -125,4 +125,49 @@ public class ForumController {
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
+
+    /*
+     * 返信編集画面　表示処理
+     */
+    @GetMapping("/editComment/{id}")
+    public ModelAndView editComment(@PathVariable Integer id){
+        ModelAndView mav = new ModelAndView();
+
+        // 投稿を1件取得
+        CommentForm comment = commentService.editComment(id);
+
+        // 画面遷移先を指定
+        mav.setViewName("/editComment");
+        // 投稿データオブジェクトを保管
+        mav.addObject("comment", comment);
+        return mav;
+    }
+
+    /*
+     * 返信編集処理
+     */
+    @PutMapping("/updateComment/{id}")
+    public ModelAndView updateComment(@PathVariable Integer id, @ModelAttribute("comment") CommentForm comment){
+
+        // UrlParameterのidを更新するentityにセット
+        comment.setId(id);
+
+        // 投稿をテーブルに格納
+        commentService.saveComment(comment);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/deleteComment/{id}")
+    public ModelAndView deleteComment(@PathVariable Integer id){
+
+        // キーを引数にserviceを呼出し
+        commentService.deleteComment(id);
+
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/");
+    }
 }

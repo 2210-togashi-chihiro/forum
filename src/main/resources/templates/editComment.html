@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>TOP</title>
+</head>
+<body>
+<div class="header-comments">
+    <h1>匿名掲示板</h1>
+</div>
+<div class="main-comments">
+    <div class="edit area">
+        <!--th:object…フォーム全体にバインドするモデルオブジェクトを指定。
+        フォーム内の各フィールドに自動的にオブジェクトのプロパティがマッピングされる
+        <form>タグに限らず、<main>や<div>などの任意の親要素にも指定可能-->
+        <form th:action="@{/updateComment/{id}(id=${comment.id})}" th:object="${comment}" th:method="put">
+            <div class="form-area">
+                <!--th:field=”*{プロパティ名}”…th:objectで指定されたオブジェクトを参照。*{}という構文がポイント
+                入力した値が出力されるという、ものすごく簡単な実装になります。-->
+                <textarea class="tweet-box" name="ReContent" th:field="*{ReContent}" size="20" maxlength="200" /></textarea><br/>
+
+                <input type="submit" value="投稿" />
+            </div>
+        </form>
+    </div>
+    <div class="footer-comments">
+        <form action="/">
+            <input type="submit" value="戻る" />
+        </form>
+    </div>
+</div>
+</body>
+</html>

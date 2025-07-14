@@ -36,6 +36,17 @@
                     <div class="text">
                         <pre><span th:text="${comment.reContent}"/></pre>
                     </div>
+                    <div class="delete-button">
+                        <form th:action="@{/deleteComment/{id}(id=${comment.id})}" th:method="delete">
+
+                            <input type="submit" value="返信削除">
+                        </form>
+                    </div>
+                    <div class="edit-button">
+                        <form th:action="@{/editComment/{id}(id=${comment.id})}" th:method="get">
+                            <input type="submit" value="返信を編集">
+                        </form>
+                    </div>
                 </div>
             </div>
         <form method="post" action="/addComment" th:object="${formModel}">

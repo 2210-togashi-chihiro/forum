@@ -37,7 +37,6 @@ public class CommentService {
         return comment;
     }
 
-
     /*
      * レコード全件取得処理
      */
@@ -62,5 +61,27 @@ public class CommentService {
             comments.add(comment);
         }
         return comments;
+    }
+
+    /*
+     * レコード1件選択
+     */
+    public CommentForm editComment(Integer id) {
+        //deleteById…キーに該当するレコードを削除
+        List<Comment> results = new ArrayList<>();
+
+        //findByIdはOptional<Report>で返る…Select結果が0件の時nullを返すよう[.orElse(null)]を付けてあげる
+        results.add((Comment) commentRepository.findById(id).orElse(null));
+
+        List<CommentForm> comment = setCommentForm(results);
+        return comment.get(0);
+    }
+
+    /*
+     * レコード削除
+     */
+    public void deleteComment(int id) {
+        //deleteById…キーに該当するレコードを削除
+        commentRepository.deleteById(id);
     }
 }
