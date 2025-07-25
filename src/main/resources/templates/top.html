@@ -13,6 +13,10 @@
     <a href="/new">
         <button class="new-button" type="button">新規投稿</button>
     </a>
+    <form action="./" method="get">
+        <input type="date" name="start" value="${startDate}"> ～ <input type="date" name="end" value="${endDate}">
+        <input type="submit" value="絞り込み">
+    </form>
     <div class="message-icon" th:each="content : ${contents}">
         <div>
             ID : <span th:text="${content.id}"/>

@@ -1,10 +1,8 @@
 package com.example.forum.service;
 
 import com.example.forum.controller.form.CommentForm;
-import com.example.forum.controller.form.ReportForm;
 import com.example.forum.repository.CommentRepository;
 import com.example.forum.repository.entity.Comment;
-import com.example.forum.repository.entity.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,8 @@ public class CommentService {
     public void saveComment(CommentForm reqComment) {
         Comment saveComment = setCommentEntity(reqComment);
 
+
+
         //save…キーが存在する場合は更新、存在しない場合は登録
         commentRepository.save(saveComment);
     }
@@ -34,6 +34,8 @@ public class CommentService {
         comment.setId(reqComment.getId());
         comment.setReportId(reqComment.getReportId());
         comment.setReContent(reqComment.getReContent());
+        comment.setCreatedDate(reqComment.getCreatedDate());
+        comment.setUpdatedDate(reqComment.getUpdatedDate());
         return comment;
     }
 
@@ -41,7 +43,7 @@ public class CommentService {
      * レコード全件取得処理
      */
     public List<CommentForm> findAllComment() {
-        List<Comment> results = commentRepository.findAll();
+        List<Comment> results = commentRepository.findAllByOrderByUpdatedDateAsc();
         List<CommentForm> comments = setCommentForm(results);
         return comments;
     }
@@ -58,6 +60,8 @@ public class CommentService {
             comment.setId(result.getId());
             comment.setReportId(result.getReportId());
             comment.setReContent(result.getReContent());
+            comment.setCreatedDate(result.getCreatedDate());
+            comment.setUpdatedDate(result.getUpdatedDate());
             comments.add(comment);
         }
         return comments;

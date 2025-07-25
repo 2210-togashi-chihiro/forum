@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -22,11 +25,11 @@ public class ForumController {
      * 投稿内容表示処理
      */
     @GetMapping
-    public ModelAndView top() {
+    public ModelAndView top(@RequestParam(name="start", required=false) String start,@RequestParam(name="end", required=false) String end) throws ParseException {
         ModelAndView mav = new ModelAndView();
 
         // 投稿を全件取得
-        List<ReportForm> contentData = reportService.findAllReport();
+        List<ReportForm> contentData = reportService.findAllReport(start, end);
         List<CommentForm> commentData = commentService.findAllComment();
 
         // 画面遷移先を指定
@@ -91,7 +94,7 @@ public class ForumController {
         ModelAndView mav = new ModelAndView();
 
         // 投稿を1件取得
-        ReportForm content = reportService.editContent(id);
+        ReportForm content = reportService.singleContent(id);
 
         // 画面遷移先を指定
         mav.setViewName("/edit");
@@ -104,10 +107,19 @@ public class ForumController {
      * 投稿編集処理
      */
     @PutMapping("/update/{id}")
-    public ModelAndView updateContent(@PathVariable Integer id, @ModelAttribute("content") ReportForm report){
+    public ModelAndView updateContent(@PathVariable Integer id, @ModelAttribute("content") ReportForm report) throws ParseException {
 
         // UrlParameterのidを更新するentityにセット
         report.setId(id);
+
+        //投稿の更新⽇時も更新
+        Date nowDate = new Date();
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String strDate = sdFormat.format(nowDate);
+        Date date = sdFormat.parse(strDate);
+
+        //更新日時(現在時刻)をReportにセット
+        report.setUpdatedDate(date);
 
         // 投稿をテーブルに格納
         reportService.saveReport(report);
@@ -119,9 +131,13 @@ public class ForumController {
      * 返信処理
      */
     @PostMapping("/addComment")
-    public ModelAndView addComment(@ModelAttribute("formModel") CommentForm commentForm){
+    public ModelAndView addComment(@ModelAttribute("formModel") CommentForm commentForm)  throws ParseException {
         // 投稿をテーブルに格納
         commentService.saveComment(commentForm);
+
+        //紐づいている投稿の更新⽇時も更新
+        reportService.updateReport(commentForm.getReportId());
+
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }
